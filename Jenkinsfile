@@ -30,6 +30,7 @@ pipeline {
             steps {
                 script{
                    timeout(time: 1, unit: 'HOURS') {
+                    sleep(5)
                 def qg = waitForQualityGate()
                 if(qg.status != 'OK') {
                     slackSend baseUrl: 'https://hooks.slack.com/services/', channel: '#jenkins-notifications', color: 'danger', message: 'Pipeline aborted: Sonarqube Analysis marked as failed', teamDomain: 'Legion14', tokenCredentialId: 'slack-channel'
@@ -62,10 +63,10 @@ Anas''', cc: '', from: '', replyTo: '', subject: 'Jenkins Job', to: 'anasbo7@hot
             steps{
                 script{
                     echo "deploying the application"
-                    withCredentials([usernamePassword(credentialsId:'nexus-docker-repo',usernameVariable:'USER',passwordVariable:'PWD')]) {
-                        sh "echo $PWD | docker login -u $USER --password-stdin localhost:8083"
-                        sh "docker build -t localhost:8083/angular-app:1.0 ."
-                        sh "docker push localhost:8083/angular-app:1.0"
+                    withCredentials([usernamePassword(credentialsId:'dockerhub',usernameVariable:'USER',passwordVariable:'PWD')]) {
+                        sh "echo $PWD | docker login -u $USER --password-stdin"
+                        sh "docker build -t houssem1996/angular-app:1.0 ."
+                        sh "docker push houssem1996/angular-app:1.0"
 
                 }
             }
